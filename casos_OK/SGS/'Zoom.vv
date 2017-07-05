@@ -1,0 +1,64 @@
+BeginZE 'Zoom.vv
+   x -0.601324081420898438 1.60132408142089844
+   y 1.22648310661315918 -0.226483166217803955
+   z -2.17944955825805664 2.17944955825805664
+   e 0.726483166217803955
+   v 0.0036702569377935648 0.0222025323995883976 0.00544741033742990408
+   r 0.999731915310135277
+   m 0.99895477294921875 -0.0107289217412471771 0.0444331467151641846 0 0.0110548781231045723 0.999913692474365234 -0.00709665333852171898 0 -0.0443531721830368042 0.00758043862879276276 0.998987138271331787 0 0 0 0 1
+   c 0.5 0.5 0
+   pd 0
+   pno 0
+   pfo 0
+   pf 4
+   pv 0
+   NowUse 2
+   DrawingType 3
+   LightVector 52.0312995910644531 -31.875 138.824005126953125 0
+   OGLShadow(UseShadows) 0
+   OGLShadow(RenderMode) RenderNice
+   OGLShadow(ShadowBias) -0.002
+   OGLShadow(AmbientShadows) 1
+   OGLShadow(UseFBO) 0
+   OGLShadow(FBOSize) 2048
+   OGLShadow(DimmedLightFactor) 0.02
+   OGLStereo(UseStereo) 0
+   OGLStereo(RelativeEyeDistance) 1
+   OGLStereo(FlipEyes) 0
+   OGLStereo(StereoMode) AnaglyphColors
+   OGLStereo(EyeDistance) 0.075
+   OGLStereo(LeftEyeDistance) 1 0 0 1
+   OGLStereo(RightEyeDistance) 0 1 1 1
+EndZE 'Zoom.vv
+
+BeginMirror
+   Mirror 0 Angle 0.0 AngleFake -15.0 SizeFactor 2.0 HeightOffset 0.25 Color #d9e5f24d Backlight Off EdgeStyle No Type Scene DrawMode Mirror
+EndMirror
+
+
+BeginPostState
+BeginSingleMesh
+  Num meshes: 0
+  Num sets: 1
+  Num cuts: 0
+  Set: 0
+  State: On
+    Name: "Kratos_Triangle2D3_Mesh_1"
+    IdSet: 2
+    Color Type: 0
+    Color Ambient: 0 0 0.3 0.5
+    Color Diffuse: 0 0 1 0.5
+    Color Specular: 1 1 1 0.5
+    Color Shininess: 0.5
+    Property Massive: 1
+    Property Transparent: 0
+    Property Style: 786446
+    Property Edge Width: 1
+    Property Vector Filter Factor: 0
+    Property Stream Arrow: 0
+  EndSet: 0
+EndSingleMesh
+  Post_Prefs_Vector_Size: 0 32 32 32
+  ResultView: {Id 22} {Contour Fill} Kratos 0.09 TEMPERATURE TEMPERATURE 0.0 4 0
+EndPostState
+

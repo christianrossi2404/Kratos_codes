@@ -1,0 +1,18 @@
+
+copper properties
+SPECIFIC_HEAT  0.39 //[kJ/(kg K)]
+DENSITY   8940 // [kg/m³]
+CONDUCTIVITY  401 //[kg*(m2/s3)/(m K)]
+
+air properties
+DENSITY 1.205 // [kg/m³]
+SPECIFIC_HEAT 1.005 //[kJ/(kg K)]
+CONDUCTIVITY 0.0257 //[ kg*(m2/s3)/(m K)]
+VISCOSITY   1.47760E-05
+
+
+Refrigerante
+DENSITY 1206 // [kg/m³]
+SPECIFIC_HEAT  1.44//[kJ/(kg K)]
+CONDUCTIVITY 0.0824 //[ kg*(m2/s3)/(m K)]
+VISCOSITY   0.202E-03

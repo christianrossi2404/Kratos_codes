@@ -1,0 +1,12 @@
+    
+copper properties
+SPECIFIC HEAT  0.39 //[kJ/(kg K)]	
+DENSITY   8940 // [kg/m³]
+CONDUCTIVITY  401 //[W/(m K)]
+
+air properties
+DENSITY 1.205 // [kg/m³]
+SPECIFIC HEAT 1.005 //[kJ/(kg K)]
+CONDUCTIVITY 0.0257 //[W/(m K)]
+
+
