@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "MainKratos.py", line 147, in <module>
+    solver.Solve()
+  File "/home/christian/Kratos/applications/FluidDynamicsApplication/python_scripts/navier_stokes_solver_fractionalstep.py", line 191, in Solve
+    (self.solver).Solve()
+RuntimeError: Error: The variable NONE is not registered!!
+
+in kratos/containers/variable_data.h:114:VariableData::KeyType VariableData::Key() const
+
