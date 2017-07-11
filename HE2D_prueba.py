@@ -292,7 +292,7 @@ initial_fluid_temperature = 298.15
 #Temperature solid initial condition
 initial_solid_temperature = 352.15
 
-v_avarage = 2
+v_avarage = 0
 
     #fluid Temperature at the inlet
 for node in thermal_main_model_part.GetSubModelPart("AutomaticInlet2D_INLET").Nodes:
@@ -345,9 +345,19 @@ for node in solid_main_model_part.Nodes:
 for node in solid_main_model_part.Nodes:
     node.SetSolutionStepValue(TEMPERATURE,initial_solid_temperature)
 
+for node in fluid_main_model_part.GetSubModelPart("AutomaticInlet2D_INLET").Nodes:
+    Inlet_velocity = Vector(3)
+    Inlet_velocity[0] = 4*v_avarage*node.Y*(0.2-node.Y)/(0.2*0.2)
+    Inlet_velocity[1] = 0.0
+    Inlet_velocity[2] = 0.0
+
+    node.SetSolutionStepValue(VELOCITY, Inlet_velocity)
+    node.Fix(VELOCITY_X)
+    node.Fix(VELOCITY_Y)
+    node.Fix(VELOCITY_Z)
 
 time = 0.0
-delta_time = 0.001
+delta_time = 0.1
 total_steps = 300000
 
 only_fluid = 1/delta_time
@@ -366,104 +376,61 @@ for step in range(1,total_steps):
     print("Step: ", step)
 
     # if (step<=only_fluid):
-
-    solid_main_model_part.CloneTimeStep(time)
-    print("solid_main_model_part.CloneTimeStep(time) done!")
-    solver_solid.SolverInitializeSolutionStep()
-    print("solver_solid.SolverInitializeSolutionStep() OK")
-    solver_solid.SolverPredict()
-    print("solver_solid.SolverPredict() OK")
-    if (step > 2):
-        solver_solid.SolverSolveSolutionStep()
-    solver_solid.SolverFinalizeSolutionStep()
-
-    mapper.StructureToFluid_ScalarMap( TEMPERATURE, TEMPERATURE, True)
-
-            #
-            # k=0
-            # fluid_therma_list = []
-    for node in thermal_main_model_part.GetSubModelPart("NoSlip2D_FLUID_INTERFACE").Nodes:
-            # thermal_main_model_part.GetSubModelPart("NoSlip2D_FLUID_INTERFACE").Nodes[id_list[k][0]].SetSolutionStepValue(TEMPERATURE, solid_temp_list[k]) # solid_temp_list[k]
-        node.Fix(TEMPERATURE)
-            #     k += 1
-
-
     fluid_main_model_part.CloneTimeStep(time) # solve the fluid
     print("fluid_main_model_part.CloneTimeStep(time) done!")
-    for node in fluid_main_model_part.GetSubModelPart("AutomaticInlet2D_INLET").Nodes:
-        Inlet_velocity = Vector(3)
-        Inlet_velocity[0] = 4*v_avarage*node.Y*(0.2-node.Y)/(0.2*0.2)
-        Inlet_velocity[1] = 0.0
-        Inlet_velocity[2] = 0.0
-
-        node.SetSolutionStepValue(VELOCITY, Inlet_velocity)
-        node.Fix(VELOCITY_X)
-        node.Fix(VELOCITY_Y)
-        node.Fix(VELOCITY_Z)
+    solid_main_model_part.CloneTimeStep(time)
+    print("solid_main_model_part.CloneTimeStep(time) done!")
     if (step > 2):
         print('before solve fluid')
         solver_fluid.Solve()
         print("solve fluid OK")
-    # else:
+        # Temperature = node.GetSolutionStepValue(TEMPERATURE)
+        # g = g0 * (1 - 1/initial_fluid_temperature * (Temperature - initial_fluid_temperature))
+        # gravity[1] = g
+        # node.SetSolutionStepValue(BODY_FORCE, gravity)
+        # node.Fix(BODY_FORCE_X)
+        # node.Fix(BODY_FORCE_Y)
+        # node.Fix(BODY_FORCE_Z)
+        mapper.FluidToStructure_ScalarMap( FACE_HEAT_FLUX, FACE_HEAT_FLUX, True)
+        for node in solid_main_model_part.GetSubModelPart("NoSlip2D_SOLID_INTERFACE").Nodes:
+            node.Fix(FACE_HEAT_FLUX)
+
+        # iteration by subdomains DN
+        iteration = 0
+        for i in range(1,50):
+            iteration += 1
+            solver_solid.SolverInitializeSolutionStep()
+            print("solver_solid.SolverInitializeSolutionStep() OK")
+            solver_solid.SolverPredict()
+            print("solver_solid.SolverPredict() OK")
+            solver_solid.SolverSolveSolutionStep()
+            solver_solid.SolverFinalizeSolutionStep()
+
+            mapper.StructureToFluid_ScalarMap( TEMPERATURE, TEMPERATURE, True)
+
+            for node in thermal_main_model_part.GetSubModelPart("NoSlip2D_FLUID_INTERFACE").Nodes:
+                node.Fix(TEMPERATURE)
+
+            solver_fluid.Solve()
+
+            mapper.FluidToStructure_ScalarMap( FACE_HEAT_FLUX, FACE_HEAT_FLUX, True)
+            for node in solid_main_model_part.GetSubModelPart("NoSlip2D_SOLID_INTERFACE").Nodes:
+                node.Fix(FACE_HEAT_FLUX)
+
+            print("****************************************iteration number ", iteration )
 
 
+        solver_solid.SolverInitializeSolutionStep()
+        print("solver_solid.SolverInitializeSolutionStep() OK")
+        solver_solid.SolverPredict()
+        print("solver_solid.SolverPredict() OK")
+        solver_solid.SolverSolveSolutionStep()
+        solver_solid.SolverFinalizeSolutionStep()
 
-        # i=0
-        # solid_temp_list = []
-        # for node in solid_main_model_part.GetSubModelPart("NoSlip2D_SOLID_INTERFACE").Nodes:
-        #     solid_temp_list.append(solid_main_model_part.GetSubModelPart("NoSlip2D_SOLID_INTERFACE").Nodes[id_list[i][1]].GetSolutionStepValue(TEMPERATURE))
-        #     i += 1
-        # print('  TEMPERATURE  solution of the solid at the Interface')
-        # print(solid_temp_list)
+        mapper.StructureToFluid_ScalarMap( TEMPERATURE, TEMPERATURE, True)
 
-
-
-
-
-        # fluid_main_model_part.CloneTimeStep(time) # solve the fluid
-        # print("fluid_main_model_part.CloneTimeStep(time) done!")
-        #
-        # for node in fluid_main_model_part.GetSubModelPart("AutomaticInlet2D_INLET").Nodes:
-        #     Inlet_velocity = Vector(3)
-        #     Inlet_velocity[0] = 4*v_avarage*node.Y*(0.2-node.Y)/(0.2*0.2)
-        #     Inlet_velocity[1] = 0.0
-        #     Inlet_velocity[2] = 0.0
-        #     node.SetSolutionStepValue(VELOCITY, Inlet_velocity)
-        #     node.Fix(VELOCITY_X)
-        #     node.Fix(VELOCITY_Y)
-        #     node.Fix(VELOCITY_Z)
-
-
-    print('before solve fluid')
-    for node in thermal_main_model_part.Nodes:
-        Temperature = node.GetSolutionStepValue(TEMPERATURE)
-        g = g0 * (1 - 1/initial_fluid_temperature * (Temperature - initial_fluid_temperature))
-        # print(g)
-        gravity[1] = g
-        node.SetSolutionStepValue(BODY_FORCE, gravity)
-        node.Fix(BODY_FORCE_X)
-        node.Fix(BODY_FORCE_Y)
-        node.Fix(BODY_FORCE_Z)
-    solver_fluid.Solve() # solve the fluid
-    print("solve fluid OK")
-        #
-    mapper.FluidToStructure_ScalarMap( FACE_HEAT_FLUX, FACE_HEAT_FLUX, True)
-        #
-        # fluid_flux_list = []
-        # i=0
-        # for node in thermal_main_model_part.GetSubModelPart("NoSlip2D_FLUID_INTERFACE").Nodes:
-        #     fluid_flux_list.append(thermal_main_model_part.GetSubModelPart("NoSlip2D_FLUID_INTERFACE").Nodes[id_list[i][0]].GetSolutionStepValue(FACE_HEAT_FLUX))
-        #     i += 1
-        # print(' fluid REACTION at the Interface')
-        #
-        # print(fluid_flux_list)
-        # sleep(1)
-        # #
-        # k = 0
-    for node in solid_main_model_part.GetSubModelPart("NoSlip2D_SOLID_INTERFACE").Nodes:
-        #     solid_main_model_part.GetSubModelPart("NoSlip2D_SOLID_INTERFACE").Nodes[id_list[k][1]].SetSolutionStepValue(FACE_HEAT_FLUX,fluid_flux_list[k])
-        node.Fix(FACE_HEAT_FLUX)
-        #     k += 1
+        for node in thermal_main_model_part.GetSubModelPart("NoSlip2D_FLUID_INTERFACE").Nodes:
+            node.Fix(TEMPERATURE)
 
 
     print ("Solved!")
