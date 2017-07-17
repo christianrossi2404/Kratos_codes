@@ -5,6 +5,7 @@ import KratosMultiphysics.FluidDynamicsApplication as KratosCFD
 import KratosMultiphysics.HeatEquationApplication as KratosHEq
 KratosMultiphysics.CheckForPreviousImport()
 
+import navier_stokes_base_solver
 def CreateSolver(fluid_main_model_part, heat_equation_main_model_part, project_parameters):
          return CFDThermalSolver(fluid_main_model_part, heat_equation_main_model_part, project_parameters)
 
@@ -207,6 +208,23 @@ class CFDThermalSolver:
         self.fluid_solver.Initialize()
         # Initialize heat_equation solver
         self.heat_equation_solver.Initialize()
+    # #
+    def SolverInitializeSolutionStep(self):
+        # (self.bdf_process).Execute()
+        self.fluid_solver.InitializeSolutionStep()
+        self.heat_equation_solver.SolverInitializeSolutionStep()
+    #
+    def SolverPredict(self):
+        self.fluid_solver.Predict()
+        self.heat_equation_solver.SolverPredict()
+
+    def SolverSolveSolutionStep(self):
+        self.fluid_solver.SolveSolutionStep()
+        self.heat_equation_solver.SolverSolveSolutionStep()
+
+    def SolverFinalizeSolutionStep(self):
+        self.fluid_solver.FinalizeSolutionStep()
+        self.heat_equation_solver.SolverFinalizeSolutionStep()
 
     def GetComputingModelPart(self):
         return self.fluid_solver.GetComputingModelPart()
@@ -222,7 +240,7 @@ class CFDThermalSolver:
 
 
     def Solve(self):
-
+        # self.buoyancy_process.ExecuteInitializeSolutionStep()
         print("------------------fluid solving")
         self.fluid_solver.Solve()
         print("------------------Thermal solving")

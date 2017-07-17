@@ -64,7 +64,7 @@ for dim in dim_vector:
     grad_w = DfiDxj(DN,w) #[1x2]
     grad_temp = DfjDxi(DN,temp) #[2x1]
     div_v = div(DN,v)
-    print(div_v.shape)
+    # print(div_v.shape)
     # print(grad_temp.shape)
 
     #Terms definition
@@ -85,8 +85,8 @@ for dim in dim_vector:
 
     # Compute the SGS stabilization
     # rv_stab =   tau *rho * cp *(v_gauss.transpose()* grad_w.transpose() + div_v*w_gauss.transpose())* Temperature_residual
-    rv_stab =   tau *rho * cp *(v_gauss.transpose()* grad_w.transpose() )* Temperature_residual
-
+    # rv_stab =   tau *rho * cp *(v_gauss.transpose()* grad_w.transpose() )* Temperature_residual
+    rv_stab +=   tau  *(v_gauss.transpose()* grad_w.transpose() )* Temperature_residual
     ## Add the stabilization terms to the original residual terms
     rv = rv_galerkin  + rv_stab
 

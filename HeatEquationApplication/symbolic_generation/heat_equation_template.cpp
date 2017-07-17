@@ -134,7 +134,7 @@ void HeatEquation<3>::ComputeGaussPointLHSContribution(bounded_matrix<double,4,4
     // Stabilization parameters
     const double c1 = 2.0;
     const double c2 = 4.0;
-    const double tau = dyn_tau_coeff*1.0/(rho*cp/delta_t + c1*rho*cp*v_norm/h + c2*k/(h*h));
+    const double tau = 1.0/(dyn_tau_coeff*rho*cp/delta_t + c1*rho*cp*v_norm/h + c2*k/(h*h));
     // const double tau = dyn_tau_coeff*1.0/(c1*rho*cp*v_norm/h + c2*k/(h*h));
     //substitute_lhs_3D
 
@@ -176,7 +176,7 @@ void HeatEquation<2>::ComputeGaussPointLHSContribution(bounded_matrix<double,3,3
     // Stabilization parameters
     const double c1 = 2.0;
     const double c2 = 4.0;
-    const double tau = dyn_tau_coeff*1.0/(rho*cp/delta_t + c1*rho*cp*v_norm/h + c2*k/(h*h));
+    const double tau = 1.0/(dyn_tau_coeff*rho*cp/delta_t + c1*rho*cp*v_norm/h + c2*k/(h*h));
 
 
 }
@@ -220,7 +220,7 @@ void HeatEquation<3>::ComputeGaussPointRHSContribution(array_1d<double,4>& rhs, 
     // Stabilization parameters
     const double c1 = 2.0;
     const double c2 = 4.0;
-    const double tau = dyn_tau_coeff*1.0/(rho*cp/delta_t + c1*rho*cp*v_norm/h + c2*k/(h*h));
+    const double tau = 1.0/(dyn_tau_coeff*rho*cp/delta_t + c1*rho*cp*v_norm/h + c2*k/(h*h));
     // const double tau = dyn_tau_coeff*1.0/(c1*rho*cp*v_norm/h + c2*k/(h*h));
 
     //substitute_rhs_3D
@@ -265,7 +265,7 @@ void HeatEquation<2>::ComputeGaussPointRHSContribution(array_1d<double,3>& rhs, 
     // Stabilization parameters
     const double c1 = 2.0;
     const double c2 = 4.0;
-    const double tau = dyn_tau_coeff*1.0/(rho*cp/delta_t + c1*rho*cp*v_norm/h + c2*k/(h*h));
+    const double tau = 1.0/(dyn_tau_coeff*rho*cp/delta_t + c1*rho*cp*v_norm/h + c2*k/(h*h));
     // const double tau = dyn_tau_coeff*1.0/(c1*rho*cp*v_norm/h + c2*k/(h*h));
     //substitute_rhs_2D
     // KRATOS_WATCH(tau)
