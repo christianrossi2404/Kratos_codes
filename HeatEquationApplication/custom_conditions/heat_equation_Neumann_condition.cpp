@@ -142,8 +142,9 @@ void HeatEquationNeumannCondition<Tdim,TNumNodes>::ComputeRHSNeumannContribution
     for (unsigned int i=0; i<TNumNodes; ++i)
     {
         const double flux_ext = rGeom[i].FastGetSolutionStepValue(FACE_HEAT_FLUX);
-        rhs_gauss[i] -= data.wGauss*data.N[i]*flux_ext;
-        std::cout << "Neumann contribution OK\n";
+        const double k = rGeom[i].FastGetSolutionStepValue(CONDUCTIVITY); // ??????????????
+        rhs_gauss[i] -= k*data.wGauss*data.N[i]*flux_ext;
+        //std::cout << "Neumann contribution OK\n";
     }
 }
 
